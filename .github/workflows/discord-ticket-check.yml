@@ -1,0 +1,20 @@
+name: Melon Ticket Discord Notifier
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # 5분마다 자동 실행
+
+jobs:
+  check-melon:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Run melon seat checker
+        run: node check-melon-seat.js
