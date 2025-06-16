@@ -1,13 +1,14 @@
 name: Melon Ticket Discord Notifier
 
 on:
-  workflow_dispatch:       # ✅ 수동 실행 버튼용
-  schedule:
-    - cron: '*/1 * * * *'  # ✅ 1분마다 자동 실행
+  workflow_dispatch:       
+  schedule:               
+    - cron: '*/1 * * * *'  
 
 jobs:
   check-melon:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
