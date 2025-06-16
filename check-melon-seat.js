@@ -3,7 +3,7 @@ const https = require("https");
 const productIds = ["211526", "211487"]; // ✔️ 샤이니 + 테스트용 공연
 const webhookUrl = "https://discord.com/api/webhooks/1384136406946939020/KPkMRI2Q7IF5S6vRsTPXLOrjNo9E6_UIz4HOO2x5D4FLOBZwfKUSvwGg2KY-Mio63WKd";
 
-// 공통 https 요청 (User-Agent 위장)
+// User-Agent 붙은 요청
 function httpsGetWithHeaders(url) {
   return new Promise((resolve, reject) => {
     https.get(url, {
@@ -65,22 +65,32 @@ function sendDiscordAlert(productId, title, time, seatCount) {
 
   const req = https.request(options, (res) => {
     res.on("data", () => {});
-    res.on("end", () => console.log(`✅ [${productId}] 알림 전송 완료`));
+    res.on("end", () => console.log(`✅ [${productId}] 디스코드 알림 전송 완료`));
   });
 
   req.write(payload);
   req.end();
 }
 
-// 메인 실행
+// 전체 실행
 async function run() {
   try {
     for (const productId of productIds) {
+      console.log(`🎯 [${productId}] 공연 확인 시작`);
+
       const schedules = await fetchSchedules(productId);
+      console.log(`📅 [${productId}] 회차 수: ${schedules.length}`);
+
       for (const schedule of schedules) {
+        console.log(`▶ [${productId}] ${schedule.performanceDatetime} 회차 확인 중`);
+        
         const scheduleId = schedule.scheduleId;
         const seatInfo = await fetchSeatInfo(productId, scheduleId);
+        console.log(`🪑 [${productId}] 좌석 정보:`, seatInfo);
+
         const totalLeft = seatInfo.reduce((acc, cur) => acc + cur.remainCnt, 0);
+        console.log(`💺 [${productId}] 총 남은 좌석 수: ${totalLeft}`);
+
         if (totalLeft > 0) {
           sendDiscordAlert(productId, schedule.performanceName, schedule.performanceDatetime, totalLeft);
         } else {
