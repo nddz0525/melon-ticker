@@ -1,8 +1,9 @@
 name: Melon Ticket Discord Notifier
 
 on:
+  workflow_dispatch:       # ✅ 수동 실행 버튼용
   schedule:
-    - cron: '*/1 * * * *'  # 1분마다 실행
+    - cron: '*/1 * * * *'  # ✅ 1분마다 자동 실행
 
 jobs:
   check-melon:
